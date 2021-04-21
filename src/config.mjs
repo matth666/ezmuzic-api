@@ -1,7 +1,13 @@
 export default {
   port: process.env.PORT,
+  cors: {
+    origin: process.env.CLIENT_ORIGIN,
+    credentials: true,
+  },
   redis: {
     host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+    db: process.env.REDIS_DB,
   },
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,

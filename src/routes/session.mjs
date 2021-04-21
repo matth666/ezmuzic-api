@@ -19,7 +19,7 @@ const session = (app) => {
       return res.status(401).send({ error: 'invalid credentials' })
     }
 
-    if (user.checkPassword(password)) {
+    if (!(await user.checkPassword(password))) {
       return res.status(401).send({ error: 'invalid credentials' })
     }
 

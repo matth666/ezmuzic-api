@@ -1,11 +1,11 @@
 import hashPassword from '../hashPassword'
-import getSafely from '../db/getSafely'
+import User from '../db/models/User.mjs'
 
 const users = (app) => {
   app.post('/users', async (req, res) => {
     const {
       ctx: { db },
-      body: { email, password },
+      body: { email, password, fullname, username },
     } = req
 
     const [existingUser] = await db('users').where({ email })
@@ -16,15 +16,15 @@ const users = (app) => {
 
     const { hash, salt } = hashPassword(password)
 
-    const [user] = await db('users')
-      .insert({
-        email,
-        passwordHash: hash,
-        passwordSalt: salt,
-      })
-      .returning('*')
+    const user = await User.query().insertAndFetch({
+      email,
+      fullname,
+      username,
+      passwordHash: hash,
+      passwordSalt: salt,
+    })
 
-    res.send(getSafely('user', user))
+    res.send(user.getSafeFields())
   })
 }
 

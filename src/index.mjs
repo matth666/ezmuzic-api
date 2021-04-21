@@ -10,12 +10,14 @@ import objection from 'objection'
 
 const app = express()
 
+const ctx = {
+  redis: new Redis(config.redis),
+  db: knex(config.knex),
+}
+
 // context
 app.use((req, res, next) => {
-  req.ctx = {
-    redis: new Redis(config.redis),
-    db: knex(config.knex),
-  }
+  req.ctx = ctx
 
   objection.Model.knex(req.ctx.db)
 
@@ -23,7 +25,7 @@ app.use((req, res, next) => {
 })
 
 // middlewares
-app.use(cors())
+app.use(cors(config.cors))
 app.use(cookieParser())
 app.use(express.json())
 app.use((req, res, next) => {
@@ -50,5 +52,15 @@ app.use(async (req, res, next) => {
 
 // routes
 routes(app)
+
+app.use((err, req, res, next) => {
+  if (!err) {
+    return next()
+  }
+
+  console.error(err)
+
+  res.send({ error: 'something went wrong' })
+})
 
 app.listen(config.port, () => console.log(`Listening on :${config.port}`))

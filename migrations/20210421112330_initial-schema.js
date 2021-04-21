@@ -7,10 +7,10 @@ exports.up = (knex) => {
     table.string('email', 120).notNullable().unique()
     table.text('passwordHash').notNullable()
     table.string('passwordSalt').notNullable()
-    table.text('bio').notNullable()
-    table.string('city').notNullable()
-    table.string('zipcode').notNullable()
-    table.string('country', 2).notNullable()
+    table.text('bio')
+    table.string('city')
+    table.string('zipcode')
+    table.string('country', 2)
   })
 }
 

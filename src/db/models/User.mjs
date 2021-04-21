@@ -12,6 +12,14 @@ class User extends objection.Model {
 
     return hash === this.passwordHash
   }
+
+  getSafeFields() {
+    return {
+      fullname: this.fullname,
+      email: this.email,
+      created_at: this.created_at,
+    }
+  }
 }
 
 export default User
